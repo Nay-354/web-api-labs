@@ -23,14 +23,15 @@ router.get('/:id', (req, res) => {
 
 //Add a task
 router.post('/', (req, res) => {
-    const { title, description, deadline, priority, done } = req.body;
+    const { title, description, deadline, priority, done, created_at, updated_at } = req.body;
     const newTask = {
         id: uuidv4(),
         title,
         description,
         deadline,
         priority,
-        done
+        done,
+        created_at: created_at || new Date().toISOString(),
     };
     tasksData.tasks.push(newTask);
     res.status(201).json(newTask);
@@ -47,6 +48,9 @@ router.put('/:id', (req, res) => {
     const updatedTask = { ...tasksData.tasks[taskIndex], ...req.body, id:id };
     tasksData.tasks[taskIndex] = updatedTask;
     res.json(updatedTask);
+    const updated_at = new Date().toISOString();
+    tasksData.tasks[taskIndex].updated_at = updated_at;
+    res.tasksData.tasks[taskIndex].updated_at = updated_at;
 });
 
 //Delete a task
@@ -60,5 +64,7 @@ router.delete('/:id', (req, res) => {
     res.status(204).send();
     tasksData.total_results--;
 });
+
+
 
 export default router;
